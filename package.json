@@ -1,0 +1,19 @@
+{
+  "name": "gnl-events",
+  "version": "1.0.0",
+  "description": "This script takes data from a Google Spreadsheet, parses it, formats for a Google Calendar sheet and updates this Google Calendar:",
+  "main": "update",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cepheid-UK/GNL-Events-calendar.git"
+  },
+  "author": "CepheidUK",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Cepheid-UK/GNL-Events-calendar/issues"
+  },
+  "homepage": "https://github.com/Cepheid-UK/GNL-Events-calendar#readme"
+}
