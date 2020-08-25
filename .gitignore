@@ -2,6 +2,7 @@
 credentials.json
 token.json
 test.js
+debug.js
 
 # Logs
 logs

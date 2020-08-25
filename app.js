@@ -13,6 +13,11 @@ module.exports.run = async function(sheets, calendar) {
     // get all the existing events on the calendar
     let allEvents = await getEvents(calendar)
 
+    if (allEvents.length === 0) {
+        console.log("No events were retrieved")
+        //return
+    }
+
     // first time use to add starting data to the calendar
     // DONT UNCOMMENT THIS UNLESS YOU ARE ERASING THE ENTIRE CALENDAR
     //await createInitialEvents(spreadsheetMatches, calendar)
@@ -36,13 +41,22 @@ module.exports.run = async function(sheets, calendar) {
 
     async function addNewEvents(matches, calendar) {
 
+        // matches comes in with all matches, some have times, some do not.
+
         let events = await getEvents(calendar)
 
-        let newEvents = []
-
+        console.log(matches)
         
-        for (var i = matches.length - 1; i>=0; i--) {
+        // In progress - fix the problem with Dave/Miyagi match not being counted. Run and test
+        // it's never comparing the miyagi event to the miyagi spreadsheet match
+
+        for (var i = matches.length; i>=0; i--) {
            let thisMatch = matches[i]
+
+           if (!thisMatch) {
+               //matches.splice(i, 1)
+               continue
+           }
 
            for (element in events) {
                let thisEvent = events[element]
@@ -51,13 +65,18 @@ module.exports.run = async function(sheets, calendar) {
 
                let regexResult = thisEvent.summary.match(regex)
 
+               // if there is already a match between these two players, remove them from the array of matches
                if (regexResult && regexResult.length === 2) {
+                   console.log(regexResult)
                    matches.splice(i, 1)
                }
            }         
         }
 
-        if (matches[0] === undefined) {
+        console.log("matches:")
+        console.log(matches)
+
+        if (!matches) {
             console.log("All events already up to date")
             return
         }
@@ -82,7 +101,14 @@ module.exports.run = async function(sheets, calendar) {
                 },
             }
 
-            createEventOnCalendar(event, calendar)
+            //await sleep(500)
+            //createEventOnCalendar(event, calendar)
+
+            function sleep(ms) {
+                return new Promise((resolve) => {
+                  setTimeout(resolve, ms);
+                });
+              }   
 
         }
     }
@@ -174,7 +200,9 @@ module.exports.run = async function(sheets, calendar) {
                     match.push(clanWar[element][2])
                     match.push(clanWar[element][5])
 
-                    allSpreadsheetMatches.push(match)
+                    if (match[0]) {
+                        allSpreadsheetMatches.push(match)
+                    }
                 }
             }
         }
@@ -185,7 +213,9 @@ module.exports.run = async function(sheets, calendar) {
 
     async function getEvents(calendar) {
         const results = await calendar.events.list({
-            calendarId: CALENDAR_ID
+            calendarId: CALENDAR_ID,
+            showDeleted: false,
+            maxResults: 2500
         })
 
         const events = results.data.items
@@ -203,7 +233,8 @@ module.exports.run = async function(sheets, calendar) {
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
             }
-            console.log('Event created');
+            console.log('Event created: ');
+            console.log(event.data.summary)
         });
     }
 

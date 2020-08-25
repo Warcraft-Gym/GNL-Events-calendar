@@ -3,7 +3,6 @@ const readline = require('readline');
 const {google} = require('googleapis');
 
 const app = require('./app.js');
-const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 
 const CALENDAR_ID = 'cepheidgaming@gmail.com'
 
@@ -111,15 +110,20 @@ module.exports.nuke = async function () {
 
   async function resetCalendar(auth) {
 
-    let calendar = google.calendar({version: 'v3', auth})
+    let calendarNuke = google.calendar({version: 'v3', auth})
 
     console.log("Nuking the calendar")
 
-    let results = await calendar.events.list({
-      calendarId: CALENDAR_ID
+    const results = await calendarNuke.events.list({
+      calendarId: CALENDAR_ID,
+      showDeleted: false,
+      maxResults: 2500
+
     })
 
     let allEvents = results.data.items
+
+    console.log("allEvents: " + results.data.items)
 
     for (element in allEvents) {
 
@@ -127,10 +131,10 @@ module.exports.nuke = async function () {
 
       let thisEvent = allEvents[element]
 
-     calendar.events.delete({
+     calendarNuke.events.delete({
         calendarId: CALENDAR_ID,
         eventId: thisEvent.id
-      },async function(err, event) {
+      }, function(err, event) {
         if (err) {
             console.log('There was an error contacting the Calendar service: ' + err);
             return;

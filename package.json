@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Cepheid-UK/GNL-Events-calendar/issues"
   },
-  "homepage": "https://github.com/Cepheid-UK/GNL-Events-calendar#readme"
+  "homepage": "https://github.com/Cepheid-UK/GNL-Events-calendar#readme",
+  "dependencies": {
+    "googleapis": "^59.0.0"
+  }
 }
