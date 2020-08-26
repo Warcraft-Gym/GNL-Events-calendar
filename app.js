@@ -45,11 +45,6 @@ module.exports.run = async function(sheets, calendar) {
 
         let events = await getEvents(calendar)
 
-        console.log(matches)
-        
-        // In progress - fix the problem with Dave/Miyagi match not being counted. Run and test
-        // it's never comparing the miyagi event to the miyagi spreadsheet match
-
         for (var i = matches.length; i>=0; i--) {
            let thisMatch = matches[i]
 
@@ -61,22 +56,18 @@ module.exports.run = async function(sheets, calendar) {
            for (element in events) {
                let thisEvent = events[element]
 
-               let regex = new RegExp(`${thisMatch[1]}|${thisMatch[2]}`,'g')
-
+               let regex = new RegExp(`${escapeRegExp(thisMatch[1])}|${escapeRegExp(thisMatch[2])}`,'g')
+               
                let regexResult = thisEvent.summary.match(regex)
 
                // if there is already a match between these two players, remove them from the array of matches
                if (regexResult && regexResult.length === 2) {
-                   console.log(regexResult)
                    matches.splice(i, 1)
                }
            }         
         }
 
-        console.log("matches:")
-        console.log(matches)
-
-        if (!matches) {
+        if (!matches[0]) {
             console.log("All events already up to date")
             return
         }
@@ -101,14 +92,17 @@ module.exports.run = async function(sheets, calendar) {
                 },
             }
 
-            //await sleep(500)
-            //createEventOnCalendar(event, calendar)
+            
+
+            await sleep(500)
+            createEventOnCalendar(event, calendar)
 
             function sleep(ms) {
                 return new Promise((resolve) => {
                   setTimeout(resolve, ms);
                 });
-              }   
+            }   
+
 
         }
     }
@@ -131,9 +125,10 @@ module.exports.run = async function(sheets, calendar) {
                 // check all the events in the calendar for the player names in the description
                 let thisEvent = events[element]
 
-                let regex = new RegExp(`${thisMatch[1]}|${thisMatch[2]}`,'g')
+                let regex = new RegExp(`${escapeRegExp(thisMatch[1])}|${escapeRegExp(thisMatch[2])}`,'g')
 
                 let regexMatch = thisEvent.summary.match(regex)
+                
                 if (regexMatch && regexMatch.length === 2) {
                     // the calendar has a match listed between these two players
                     let spreadsheetDatetime = new Date(thisMatch[0]).toISOString()
@@ -291,6 +286,10 @@ module.exports.run = async function(sheets, calendar) {
         }
 
         return clanWar
+    }
+
+    function escapeRegExp(string){
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
     }
 
     // ------------------
