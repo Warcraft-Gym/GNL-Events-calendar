@@ -17,8 +17,9 @@
   },
   "homepage": "https://github.com/Cepheid-UK/GNL-Events-calendar#readme",
   "dependencies": {
-    "chrono-node": "^2.1.8",
+    "chrono-node": "^2.1.10",
     "googleapis": "^59.0.0",
+    "node-cron": "^2.0.3",
     "nvm": "0.0.4"
   }
 }

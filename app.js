@@ -2,10 +2,17 @@
 
 const chrono = require('chrono-node')
 
-var daylightSavings = true
+var daylightSavings = false;
 const CALENDAR_ID = 'cepheidgaming@gmail.com'
+const SHEET_ID = '1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y' // S5
+const WEEKS = 1; // CHANGE THIS WHEN MANTALO UPDATES THE SPREADSHEET
+
+// GNL S4 id: 1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g
+// test id: 1XX3EvIFvZ2irNI74ne1CKP4ONT49ZjiVHof3NAS9JTk
 
 module.exports.run = async function(sheets, calendar) {
+
+    console.log("Scanning spreadsheet...")
     
     // get all the spreadsheet matches in format [datetime, player1, player2]
     let spreadsheetMatches = await getAllSpreadsheetMatches(sheets, createClanWarStrings())
@@ -202,6 +209,8 @@ module.exports.run = async function(sheets, calendar) {
             }
         }
 
+        console.log(allSpreadsheetMatches)
+
         return allSpreadsheetMatches
         
     }
@@ -261,12 +270,11 @@ module.exports.run = async function(sheets, calendar) {
     async function requestClanWar(sheets, range) {
         var requestPlayers = await sheets.spreadsheets.values.get({
             
-            // GNL id: 1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g
-            // test id: 1XX3EvIFvZ2irNI74ne1CKP4ONT49ZjiVHof3NAS9JTk
-            
-            spreadsheetId: '1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g',
+            spreadsheetId: `${SHEET_ID}`,
             range: range
         })
+
+        console.log(requestPlayers.data.values)
 
         return requestPlayers.data.values
     }
@@ -274,16 +282,19 @@ module.exports.run = async function(sheets, calendar) {
     function createClanWarStrings() {
         let clanWar = []
 
-        // matches are in blocks of 7 for each clan war.
+        // matches are in blocks of 7 for each clan war. (9 for S5)
 
-        let cellRanges = [`D6:I12`,`D16:I22`,`D26:I32`]
+        let cellRanges = [`D6:I14`,`D18:I26`,`D30:I38`]
+        // should really futureproof this
 
-        for (let i=1; i<=5; i++) {
+        for (let i=1; i<=WEEKS; i++) {
             for (let j=0; j<=2; j++) {
                 clanWar.push(`Week ${i}!${cellRanges[j]}`)
                 // create 18 strings which correspond to the date and time cells for each match
             }
         }
+
+        console.log(clanWar)
 
         return clanWar
     }
