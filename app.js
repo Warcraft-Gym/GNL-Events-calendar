@@ -2,10 +2,10 @@
 
 const chrono = require('chrono-node')
 
-var daylightSavings = false;
 const CALENDAR_ID = 'cepheidgaming@gmail.com'
 const SHEET_ID = '1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y' // S5
 const WEEKS = 1; // CHANGE THIS WHEN MANTALO UPDATES THE SPREADSHEET
+const DAYLIGHT_SAVINGS = false;
 
 // GNL S4 id: 1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g
 // test id: 1XX3EvIFvZ2irNI74ne1CKP4ONT49ZjiVHof3NAS9JTk
@@ -245,7 +245,7 @@ module.exports.run = async function(sheets, calendar) {
     function convertToIso(match) {
 
         let timezone
-        if (daylightSavings) {
+        if (DAYLIGHT_SAVINGS) {
             timezone = "-04:00"
         } else {
             timezone = "-05:00"
@@ -254,10 +254,16 @@ module.exports.run = async function(sheets, calendar) {
         if (match[0] != '' && match[1] != '') {
             // converts the data to a standard accepted by google calendar
 
+            let adjustment = 5;
+
+            if (DAYLIGHT_SAVINGS) {
+                adjustment = 4;
+            }
+
             // create a new date object based on the date in the match field (thanks chrono)
             let parsedDate = new Date (chrono.parseDate(`${match[1]}`))
             // change the hours to the UTC time of the match (+4 hours thanks to EDT)
-            let hours = parseInt(match[0].match(/\d{1,2}/)) + 4
+            let hours = parseInt(match[0].match(/\d{1,2}/)) + adjustment
             parsedDate.setUTCHours(`${hours}`)
 
             return parsedDate.toISOString()
