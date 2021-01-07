@@ -2,9 +2,9 @@
 
 const chrono = require('chrono-node')
 
-const CALENDAR_ID = 'cepheidgaming@gmail.com'
-const SHEET_ID = '1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y' // S5
-const WEEKS = 1; // CHANGE THIS WHEN MANTALO UPDATES THE SPREADSHEET
+const CALENDAR_ID = 'cepheidgaming@gmail.com';
+const SHEET_ID = '1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y'; // S5
+const WEEKS = 1;
 const DAYLIGHT_SAVINGS = false;
 
 // GNL S4 id: 1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g
@@ -132,6 +132,8 @@ module.exports.run = async function(sheets, calendar) {
                 // check all the events in the calendar for the player names in the description
                 let thisEvent = events[element]
 
+                if (thisMatch[0] == undefined || thisMatch[1] == undefined || thisMatch[2] == undefined) continue
+
                 let regex = new RegExp(`${escapeRegExp(thisMatch[1])}|${escapeRegExp(thisMatch[2])}`,'g')
 
                 let regexMatch = thisEvent.summary.match(regex)
@@ -178,7 +180,7 @@ module.exports.run = async function(sheets, calendar) {
                 console.log('There was an error contacting the Calendar service: ' + err);
                 return;
             }
-            console.log('Event updated');
+            console.log(`Event updated: ${event.summary}`);
         });
 
         return updatedEvent
@@ -208,8 +210,6 @@ module.exports.run = async function(sheets, calendar) {
                 }
             }
         }
-
-        console.log(allSpreadsheetMatches)
 
         return allSpreadsheetMatches
         
@@ -280,8 +280,6 @@ module.exports.run = async function(sheets, calendar) {
             range: range
         })
 
-        console.log(requestPlayers.data.values)
-
         return requestPlayers.data.values
     }
 
@@ -299,8 +297,6 @@ module.exports.run = async function(sheets, calendar) {
                 // create 18 strings which correspond to the date and time cells for each match
             }
         }
-
-        console.log(clanWar)
 
         return clanWar
     }
