@@ -4,7 +4,7 @@ const chrono = require('chrono-node')
 
 const CALENDAR_ID = 'cepheidgaming@gmail.com';
 const SHEET_ID = '1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y'; // S5
-const WEEKS = 1;
+const WEEKS = 5;
 const DAYLIGHT_SAVINGS = false;
 
 // GNL S4 id: 1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g
