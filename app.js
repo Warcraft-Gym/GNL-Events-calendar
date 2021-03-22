@@ -3,11 +3,13 @@
 const chrono = require('chrono-node')
 
 const CALENDAR_ID = 'cepheidgaming@gmail.com';
-const SHEET_ID = '1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y'; // S5
+const SHEET_ID = '1h864L0Knq-l6rLgLNsRJ0tAeioNSYgu2OawsLggO3nc'; // S6
 const WEEKS = 5;
-const DAYLIGHT_SAVINGS = false;
+const DAYLIGHT_SAVINGS = true;
 
 // GNL S4 id: 1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g
+// GNL S5 id: 1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y
+// GNL S6 id: 1h864L0Knq-l6rLgLNsRJ0tAeioNSYgu2OawsLggO3nc
 // test id: 1XX3EvIFvZ2irNI74ne1CKP4ONT49ZjiVHof3NAS9JTk
 
 module.exports.run = async function(sheets, calendar) {
@@ -244,21 +246,15 @@ module.exports.run = async function(sheets, calendar) {
 
     function convertToIso(match) {
 
-        let timezone
-        if (DAYLIGHT_SAVINGS) {
-            timezone = "-04:00"
+        let adjustment
+
+        if (DAYLIGHT_SAVINGS) { // I hate daylight savings
+            adjustment = 4;
         } else {
-            timezone = "-05:00"
+            adjustment = 5;
         }
         
-        if (match[0] != '' && match[1] != '') {
-            // converts the data to a standard accepted by google calendar
-
-            let adjustment = 5;
-
-            if (DAYLIGHT_SAVINGS) {
-                adjustment = 4;
-            }
+        if (match[0] != '' && match[1] != '') { // converts the data to a standard accepted by google calendar
 
             // create a new date object based on the date in the match field (thanks chrono)
             let parsedDate = new Date (chrono.parseDate(`${match[1]}`))
@@ -276,7 +272,7 @@ module.exports.run = async function(sheets, calendar) {
     async function requestClanWar(sheets, range) {
         var requestPlayers = await sheets.spreadsheets.values.get({
             
-            spreadsheetId: `${SHEET_ID}`,
+            spreadsheetId: SHEET_ID,
             range: range
         })
 

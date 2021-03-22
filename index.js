@@ -19,7 +19,6 @@ module.exports.run = async function () {
   fs.readFile('credentials.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
-    console.log(JSON.parse(content))
     authorize(JSON.parse(content), runApp);
   });
 
