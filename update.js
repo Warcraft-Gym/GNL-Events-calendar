@@ -1,10 +1,10 @@
-var cron = require('node-cron');
-
+const cron = require('node-cron');
 const index = require('./index.js');
+const CRON_SCHEDULE = process.env.CRON_SCHEDULE || '0,15,30,45 * * * *'; // every 15 mins by default
  
-cron.schedule('0,15,30,45 * * * *', () => {
+cron.schedule(CRON_SCHEDULE, () => {
 
     let time = new Date()
-    console.log("Checking spreadsheet @ " + time.getTime() + " on " + time.getDate())
+    console.log(`Checking spreadsheet @ ${time.toUTCString()}`)
     index.run();
 });

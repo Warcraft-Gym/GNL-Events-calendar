@@ -101,9 +101,7 @@ module.exports.run = async function(sheets, calendar) {
                 },
             }
 
-            
-
-            await sleep(500)
+            await sleep(250)
             createEventOnCalendar(event, calendar)
 
             function sleep(ms) {
@@ -111,8 +109,6 @@ module.exports.run = async function(sheets, calendar) {
                   setTimeout(resolve, ms);
                 });
             }   
-
-
         }
     }
 
