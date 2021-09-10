@@ -79,7 +79,6 @@ module.exports.run = async function () {
     let calendar = google.calendar({version: 'v3', auth})
 
     app.run(sheets, calendar)
-
   }
 }
 
@@ -120,17 +119,14 @@ module.exports.nuke = async function () {
       calendarId: CALENDAR_ID,
       showDeleted: false,
       maxResults: 2500
-
     })
 
     let allEvents = results.data.items
-
-    console.log("allEvents: " + results.data.items)
+    console.log(`Nuking ${results.data.items.length} events`)
 
     for (element in allEvents) {
 
       await sleep(250)
-
       let thisEvent = allEvents[element]
 
      calendarNuke.events.delete({
@@ -141,10 +137,7 @@ module.exports.nuke = async function () {
             console.log('There was an error contacting the Calendar service: ' + err);
             return;
         }
-        
         console.log(`${thisEvent.id} deleted`);
-        
-         
     });
     }
 
@@ -153,7 +146,5 @@ module.exports.nuke = async function () {
         setTimeout(resolve, ms);
       });
     }
-
-
   }
 }

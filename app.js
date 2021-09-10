@@ -2,29 +2,30 @@
 
 const chrono = require('chrono-node')
 
-const CALENDAR_ID = 'cepheidgaming@gmail.com';
-const SHEET_ID = '1h864L0Knq-l6rLgLNsRJ0tAeioNSYgu2OawsLggO3nc'; // S6
-const WEEKS = 5;
-const DAYLIGHT_SAVINGS = true;
+const CALENDAR_ID = process.env.CALENDAR_ID || 'cepheidgaming@gmail.com';
+const SHEET_ID = process.env.SHEET_ID || '1l5LoaIEPECoR-cMHhsy-gkgEPOLs3WfhrgeJ9byRs0k'; // S8 Test Sheet
+const WEEKS = process.env.WEEKS || 5;
+const CELL_RANGES = [`B5:I14`,`B17:I26`,`B29:I38`];
+const TWITCH_URL = `https://www.twitch.tv/`;
 
 // GNL S4 id: 1X3pV8NHzimYPmn99mgwFap8Y01j8hH5l9s2gtvUjt3g
 // GNL S5 id: 1kSpVRFMthBJc_FLILAQAFH7UvqUMbtZWaegVA9i858Y
 // GNL S6 id: 1h864L0Knq-l6rLgLNsRJ0tAeioNSYgu2OawsLggO3nc
 // test id: 1XX3EvIFvZ2irNI74ne1CKP4ONT49ZjiVHof3NAS9JTk
+// S8 test: 1l5LoaIEPECoR-cMHhsy-gkgEPOLs3WfhrgeJ9byRs0k
 
 module.exports.run = async function(sheets, calendar) {
 
     console.log("Scanning spreadsheet...")
     
     // get all the spreadsheet matches in format [datetime, player1, player2]
-    let spreadsheetMatches = await getAllSpreadsheetMatches(sheets, createClanWarStrings())
+    let spreadsheetMatches = await getAllSpreadsheetMatches(sheets)
 
     // get all the existing events on the calendar
     let allEvents = await getEvents(calendar)
 
     if (allEvents.length === 0) {
         console.log("No events were retrieved")
-        //return
     }
 
     // first time use to add starting data to the calendar
@@ -38,14 +39,9 @@ module.exports.run = async function(sheets, calendar) {
     // check for events that the calendar does not have, and add the new ones
     await addNewEvents(spreadsheetMatches, calendar)
 
-
-    //
-    // ------------- FUNCTIONS -------------
-    //
-
     /**
  * @param matches Matches in the format ['Iso string of datetime', 'player 1', 'player 2']
- * @param events All events from a google calendar as received by the Google Api (i.e. results.data.items)
+ * @param calendar Authenticated Google Calendar object
  */
 
     async function addNewEvents(matches, calendar) {
@@ -58,27 +54,26 @@ module.exports.run = async function(sheets, calendar) {
            let thisMatch = matches[i]
 
            if (!thisMatch) {
-               //matches.splice(i, 1)
                continue
            }
 
-           for (element in events) {
-               let thisEvent = events[element]
+            if (!matches[0]) {
+                console.log("All events already up to date")
+                return
+            }
 
-               let regex = new RegExp(`${escapeRegExp(thisMatch[1])}|${escapeRegExp(thisMatch[2])}`,'g')
-               
-               let regexResult = thisEvent.summary.match(regex)
+           if (events.length != 0) {
+               for (element in events) {
+                   // remove all existing calendar events from consideration to prevent duplicates
+                   let thisEvent = events[element]
+                   let regex = new RegExp(`${escapeRegExp(thisMatch[1])}|${escapeRegExp(thisMatch[2])}`,'g')
+                   let regexResult = thisEvent.summary.match(regex)
 
-               // if there is already a match between these two players, remove them from the array of matches
-               if (regexResult && regexResult.length === 2) {
-                   matches.splice(i, 1)
+                   if (regexResult && regexResult.length === 2) {
+                       match.splice(i, 1)
+                   }
                }
-           }         
-        }
-
-        if (!matches[0]) {
-            console.log("All events already up to date")
-            return
+           }
         }
 
         for (element in matches) {
@@ -184,30 +179,48 @@ module.exports.run = async function(sheets, calendar) {
         return updatedEvent
     }
 
-    async function getAllSpreadsheetMatches(sheets, cellRangesForMatches) {
+    async function getAllSpreadsheetMatches(sheets) {
 
+        let cellRangesForMatches = createClanWarStrings(); // [`Week 1!B5:I14`, `Week 1!B17:I26`, ... etc ]
         let allSpreadsheetMatches = []
 
         for (element in cellRangesForMatches) {
-            let clanWar = await requestClanWar(sheets, cellRangesForMatches[element])
+            
+            let clanWar = await requestGNLClanWarDataBlock(sheets, cellRangesForMatches[element]) 
+            let teamNames = [clanWar[0][4], clanWar[0][7]];
+            let timezone = clanWar[0][2];
+
+            clanWar.shift(); // remove the header row
+            
             for (element in clanWar) {
                 if (clanWar[element] != undefined) {
-                    // 1. convert date and time to iso format
-                    // 2. create a new array with: [datetime of start, player1, player2]
-                    // 3. push this array to "allSpreadsheetMatches"
+
+                    if (clanWar[element][2] == undefined) return
 
                     let match = []
 
-                    match.push(convertToIso(clanWar[element]))
-                    match.push(clanWar[element][2])
-                    match.push(clanWar[element][5])
+                    if (clanWar[element][2] && clanWar[element][3]) { // must have TIME and DATE
+                        
+                        let matchStartTime = convertToIso(`${clanWar[element][2]} ${clanWar[element][3]}`, timezone);
+                        
+                        if (matchStartTime != null) {
+                            match.push(matchStartTime);
+                        }
+                    }
+                    else {
+                        continue;
+                    }
+                    match.push(clanWar[element][4])
+                    match.push(clanWar[element][7])
 
-                    if (match[0]) {
+                    if (match != undefined && match[0] && match.length == 3) {
                         allSpreadsheetMatches.push(match)
                     }
                 }
             }
         }
+
+        console.log(allSpreadsheetMatches)
 
         return allSpreadsheetMatches
         
@@ -240,32 +253,56 @@ module.exports.run = async function(sheets, calendar) {
         });
     }
 
-    function convertToIso(match) {
+    function convertToIso(match, timezone) {
 
-        let adjustment
-
-        if (DAYLIGHT_SAVINGS) { // I hate daylight savings
-            adjustment = 4;
+        let timezoneMatch = timezone.match(/EDT|EST|UTC|CEST|CET/)
+        let timezoneString;
+        let adjustment;
+        
+        if (timezoneMatch != null) {
+            timezoneString = timezoneMatch[0]
         } else {
-            adjustment = 5;
+            timezoneString = `EST`;
+        }
+
+        switch(timezoneString){
+            case(`EST`):
+                adjustment = 5;
+                break;
+            case(`EDT`):
+                adjustment = 4;
+                break;
+            case(`UTC`):
+                adjustment = 0;
+                break;
+            case(`CEST`):
+                adjustment = -2;
+                break;
+            case(`CET`):
+                adjustment = -1;
+                break;
+            default:
+                adjustment = 5;
+                break;
         }
         
-        if (match[0] != '' && match[1] != '') { // converts the data to a standard accepted by google calendar
+        if (match != '' && match != undefined) { // converts the data to a standard accepted by google calendar
 
             // create a new date object based on the date in the match field (thanks chrono)
-            let parsedDate = new Date (chrono.parseDate(`${match[1]}`))
+            let parsedDate = new Date (chrono.parseDate(`${match}`))
             // change the hours to the UTC time of the match (+4 hours thanks to EDT)
             let hours = parseInt(match[0].match(/\d{1,2}/)) + adjustment
             parsedDate.setUTCHours(`${hours}`)
-
-            return parsedDate.toISOString()
-        } else {
-            return
+            
+            if (!isNaN(parsedDate.getTime())) {
+                return parsedDate.toISOString()
+            } else {
+                return null;
+            }
         }
-        
     }
 
-    async function requestClanWar(sheets, range) {
+    async function requestGNLClanWarDataBlock(sheets, range) {
         var requestPlayers = await sheets.spreadsheets.values.get({
             
             spreadsheetId: SHEET_ID,
@@ -276,16 +313,12 @@ module.exports.run = async function(sheets, calendar) {
     }
 
     function createClanWarStrings() {
-        let clanWar = []
-
-        // matches are in blocks of 7 for each clan war. (9 for S5)
-
-        let cellRanges = [`D6:I14`,`D18:I26`,`D30:I38`]
-        // should really futureproof this
+        
+        let clanWar = [] // matches are in blocks of 9 for each clan war, and have a header line
 
         for (let i=1; i<=WEEKS; i++) {
             for (let j=0; j<=2; j++) {
-                clanWar.push(`Week ${i}!${cellRanges[j]}`)
+                clanWar.push(`Week ${i}!${CELL_RANGES[j]}`)
                 // create 18 strings which correspond to the date and time cells for each match
             }
         }
