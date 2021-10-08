@@ -4,6 +4,9 @@ token.json
 test.js
 debug.js
 
+# Typescript build files
+build
+
 # Logs
 logs
 *.log
