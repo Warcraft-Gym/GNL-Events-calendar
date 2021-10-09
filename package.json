@@ -2,13 +2,13 @@
   "name": "gnl-events-calendar",
   "version": "1.1.0",
   "description": "GNL Events Calendar",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
-    "start:dev": "nodemon",
     "build": "rimraf ./build && tsc",
-    "start:prod": "npm run build && node build/index.js",
+    "start:prod": "npm run build && node build/update.js",
     "lint": "eslint . --ext .ts",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "runonce": "npm run build && node ./build/run/onetime.js"
   },
   "repository": {
     "type": "git",
@@ -22,15 +22,20 @@
   "homepage": "https://github.com/Cepheid-UK/GNL-Events-calendar#readme",
   "devDependencies": {
     "@types/node": "^16.10.3",
+    "@types/node-cron": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
+    "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "nodemon": "^2.0.13",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "googleapis": "^39.2.0",
+    "node-cron": "^3.0.0"
   }
 }
