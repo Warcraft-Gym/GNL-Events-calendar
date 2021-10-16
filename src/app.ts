@@ -60,11 +60,11 @@ export default function run(): void {
 		});
 		rl.question('Enter the code from that page here: ', (code) => {
 			rl.close();
-			oAuth2Client.getToken(code, (err: any, token: any) => {
+			oAuth2Client.getToken(code, (err: unknown, token: any): void => {
 				if (err)
 					return console.error(
 						'Error while trying to retrieve access token',
-						err,
+						err
 					);
 				oAuth2Client.setCredentials(token);
 
@@ -80,8 +80,7 @@ export default function run(): void {
 	function RunApp(auth: OAuth2Client): void {
 		const sheets = google.sheets({ version: 'v4', auth });
 		const calendar = google.calendar({ version: 'v3', auth });
-		console.log('hi');
 
 		parser(sheets, calendar);
 	}
-};
+}

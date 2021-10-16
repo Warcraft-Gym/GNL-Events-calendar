@@ -35,6 +35,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "chrono-node": "^2.3.2",
     "googleapis": "^39.2.0",
     "node-cron": "^3.0.0"
   }

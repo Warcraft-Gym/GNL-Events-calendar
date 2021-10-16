@@ -1,0 +1,221 @@
+[
+  [ '16:00:00', 'Sun 3/28', 'Monk', '2', '0', 'Penguin' ],
+  [ '15:00:00', 'Sat 3/27', 'Fury', '1', '2', 'Freeman' ],
+  [ '15:00:00', 'Sun 3/28', 'BAK', '2', '0', 'Smile' ],
+  [ '18:30:00', 'Sat 3/27', 'Pakito', '0', '2', 'Beercraft' ],
+  [ '17:00:00', 'Thurs 3/25', 'Bidoux', '1', '2', 'DragonbornBR' ],
+  [ '18:30:00', 'Thurs 3/25', 'Kinabr', '0', '2', 'GermanGandalf' ],
+  [ '', '', 'BlademasterRUSH UD', '2', '0', 'Imapanda' ],
+  [ '18:30:00', 'Friday 3/26', 'Cheeseboy', '2', '0', 'Ewar' ],
+  [
+    '20:00:00',
+    'Thursday 3/25',
+    'Fireal',
+    '0',
+    '2',
+    'Fila Mindbender'
+  ]
+]
+[
+  [ '01:00:00', 'Sun 3/28', 'KoryMac', '2', '0', 'Albz' ],
+  [ '12:00:00', 'Thurs 3/25', 'Hellomotto', '0', '2', 'Bushymo UD' ],
+  [ '10:30:00', 'Fri 3/26', 'Mantalo', '2', '1', 'Niklaus' ],
+  [ '', '', 'DerCryser47 UD', '0', '2', 'Remote' ],
+  [ '', '', 'Satella', '2', '1', 'BaronVonsg' ],
+  [ '', '', 'Mostar', '2', '0', 'Domi' ],
+  [ '', 'Sun Apr 4', 'Ocdrummer', '0', '2', 'Air' ],
+  [ '', '', 'nuelltz', '1', '2', 'BobSacamano' ],
+  [ '', '', 'methodman', '0', '2', 'barlenn' ]
+]
+[
+  [
+    '21:00:00',
+    'Saturday 3/27',
+    'Handfish(NE)',
+    '0',
+    '2',
+    'TheRedOrc(UD)'
+  ],
+  [ '', '', 'sashaza', '2', '1', 'Alterego' ],
+  [ '18:00:00', 'Sunday 3/28', 'Whisperkill', '2', '1', 'breezeey' ],
+  [ '16:00:00', 'Saturday 3/27', 'Grinchy(NE)', '1', '2', 'eworm' ],
+  [ '18:00:00', 'Saturday 3/27', 'Link', '2', '1', 'DaviTsin' ],
+  [ '', '', 'PieCommando', '0', '2', 'ZsomBoy(NE)' ],
+  [ '', 'Thursday 3/25', 'Wontu', '2', '0', 'empire4earth' ],
+  [ '', '', 'Melina', '2', '0', 'wez(HU)' ],
+  [ '', '', 'Ninjury', '0', '2', 'Brickbaw' ]
+]
+[
+  [ '', '', 'Rukio', '2', '0', 'Shades' ],
+  [ '08:00', 'Sat, April 3', 'Floss2xdaily', '2', '1', 'Sarazil' ],
+  [ '', '', 'Cheeseboy', '0', '2', 'Satella' ],
+  [ '', 'Sun. Apr 4', 'kinabr', '1', '2', 'Guru' ],
+  [ '', '', 'Bidoux', '1', '2', 'Mostar' ],
+  [ '', 'Mon Apr 12', 'BurrowRush', '2', '0', 'methodman UD' ],
+  [ '', 'Sat Apr 3', 'BlademasterRUSH UD', '2', '1', 'ocdrummer' ],
+  [ '', '', 'Seanmcnabb', '1', '2', 'hellomotto' ],
+  [ '11:00', 'Sun, Apr 4', 'Pakito', '0', '2', 'Nuelltz' ]
+]
+[
+  [ '01:00', 'Fri, Apr 2', 'AlbZ', '0', '2', 'AlterEgo' ],
+  [ '', '', 'wilkyb', '0', '2', 'Zsomboy' ],
+  [ '', '', 'SuNburSt', '2', '1', 'ambitioN' ],
+  [ '14:00', 'Tue, Mar 30', 'Barlenn', '2', '0', 'Panikrocker' ],
+  [ '', '', 'COOKIEBUD', '2', '0', 'Philip' ],
+  [ '', '', 'Air', '0', '2', 'sickboyyy' ],
+  [ '14:00', 'Sat, Apr 3', 'Domi', '0', '2', 'eworm' ],
+  [ '09:00', 'Fri, Apr 2', 'Remote', '2', '0', 'empire earth' ],
+  [ '13:00', 'Mon, Apr 5', 'BobSacamano', '2', '1', 'BrickBaw' ]
+]
+[
+  [ '05:00', 'Thurs, April 8', 'Penguin', '2', '0', 'Jatz' ],
+  [ '', '', 'Fattsrussell', '1', '2', 'Wontu' ],
+  [ '15:00', '', 'Energobomj', '0', '2', 'Piecommando' ],
+  [ '', '', 'EclipseNova', '2', '1', 'Melina' ],
+  [ '14:00', 'Sun April 4', 'DragonbornBR', '2', '1', 'Grinchy' ],
+  [ '13:00', 'Sat April 3', 'Freeman', '0', '2', 'Link' ],
+  [ '15:00', 'Sun April 4', 'MoreWork', '0', '2', 'Sashaza' ],
+  [ '15:00', 'Sat April 3', 'GermanGandalf', '2', '0', 'Whisperkill' ],
+  [ '13:30', 'Fri April 2', 'Imapanda', '0', '2', 'SoftIceCream' ]
+]
+[
+  [ '', '', 'Monk [Orc]', '2', '1', 'Remote' ],
+  [ '', '', 'Bidoux', '0', '2', 'Niklaus' ],
+  [ '', '', 'BAK', '2', '0', 'Bushymo' ],
+  [ '', '', 'Pakito', '0', '2', 'WilkyB' ],
+  [ '', '', 'Kinabr', '2', '0', 'Domi' ],
+  [ '', '', 'Seanmcnabb', '2', '1', 'CookieBUD' ],
+  [ '', '', 'Fireal', '0', '2', 'AlbZ' ],
+  [ '16:00:00', 'Thu, Apr 8', 'Cheeseboy', '2', '1', 'BaronvonSG' ],
+  [ '', '', 'Fury', '0', '2', 'Barlenn' ]
+]
+[
+  [ '', '', 'Beercraft', '1', '2', 'Philip' ],
+  [
+    '19:30:00',
+    'Wed, April 7',
+    'Fila Mindbender',
+    '2',
+    '0',
+    'Alterego'
+  ],
+  [ '16:00:00', 'Sun, April 11', 'Fattsrussel', '0', '2', 'ambitioN.' ],
+  [
+    '07:00:00',
+    'Sat, April 10',
+    'Iamsmile callmeJebus',
+    '1',
+    '2',
+    'Zsomboy'
+  ],
+  [ '16:00:00', 'Sat, April 10', 'Dragonborn', '2', '1', 'Davitsin' ],
+  [ '11:00:00', 'Sun, April 11', 'Penguin', '0', '2', 'Humber' ],
+  [
+    '15:00:00',
+    'Tues, Arpil 6',
+    'EnergoBornj',
+    '2',
+    '0',
+    'Empire earth'
+  ],
+  [ '15:00:00', 'Sun, April 11', 'EclipseNova', '2', '1', 'sickboyyy' ],
+  [
+    '15:00:00',
+    'Sat, April 10',
+    'GermanGandalf',
+    '2',
+    '0',
+    'Panikrocker'
+  ]
+]
+[
+  [ '09:30', 'Fri April 9', 'Mantalo', '0', '2', 'Handfish' ],
+  [
+    '23:00',
+    'Sun April 11',
+    'Phoenix (Random)',
+    '0',
+    '2',
+    'Jatz (Random)'
+  ],
+  [ '', '', 'KoryMac', '2', '1', 'Sashaza' ],
+  [ '', '', 'Sarazil', '2', '0', 'Ninjury' ],
+  [ '11:00', 'Sat April 10', 'Satella', '2', '0', 'SoftIceCream' ],
+  [ '13:00', 'Sat April 10', 'Guru', '2', '1', 'Whisperkill' ],
+  [ '15:00', 'Sat April 10', 'Mostar', '2', '1', 'Link' ],
+  [ '16:00', 'Fri April 9', 'Hellomotto', '2', '0', 'Tha Grinch' ],
+  [ '01:00', 'Sun April 25', 'Nuelltz', '0', '2', 'PieCommando' ]
+]
+[
+  [ '', '', 'Rukio', '0', '2', 'Handfish' ],
+  [ '23:00:00', 'Apr 18 Sun', 'Monk', '2', '0', 'Jatz' ],
+  [ '', '', 'BAK', '2', '1', 'Wontu' ],
+  [ '', '', 'CryptLordRush', '2', '0', 'Whisperkill' ],
+  [ '', '', 'BurrowRush', '0', '2', 'Tha Grinch' ],
+  [ '20:30:00', 'Apr 18 Sun', 'Seanmcnabb', '2', '0', 'Ninjury' ],
+  [ '', '', 'Cheeseboy', '0', '2', 'SoftIceCream' ],
+  [ '', '', 'Kinabr', '0', '2', 'Sashaza' ],
+  [ '23:00:00', 'Fri 4/16', 'Bidoux', '2', '1', 'PieCommando' ]
+]
+[
+  [ '13:30:00', 'Fri 4/16', 'Penguin', '2', '1', 'SuNburSt' ],
+  [ '16:00:00', 'Sun 4/24', 'Morework', '1', '2', 'BaronVonSG' ],
+  [ '11:00:00', 'Sun 4/18', 'Imapanda', '2', '0', 'AlbZ' ],
+  [ '19:00:00', 'Sat 4/17', 'Freeman', '2', '0', 'Wilkyb' ],
+  [ '', '', 'Beercraft', '2', '1', 'BobSacamano' ],
+  [ '09:00:00', 'Wed 4/14', 'Smile', '2', '0', 'Domi' ],
+  [ '15:00:00', 'Thur 4/15', 'Energo', '1', '2', 'Bushymo' ],
+  [ '', '', 'EclipseNova', '2', '0', 'Air' ],
+  [ '', '', 'Fattsrussel', '2', '0', 'Niklaus' ]
+]
+[
+  [ '09:30', 'Apr 16 Fri', 'Mantalo', '2', '0', 'Theredorc' ],
+  [ '', '', 'Mostar', '0', '2', 'Panikrocker' ],
+  [ '09:00', 'Apr 17 Sat', 'Sarazil', '0', '2', 'Breezeey' ],
+  [ '16:00', 'April 25 Sun', 'Nuelltz', '0', '2', 'Empire earth' ],
+  [ '22:00', 'Apr 18 Sun', 'KoryMac', '2', '0', 'AlterEgo' ],
+  [ '', '', 'Hellomotto', '2', '0', 'Davitsin' ],
+  [ '', '', 'BlackPhoenix UD', '2', '0', 'Eworm' ],
+  [ '09:00', 'Apr 18 Sund', 'Methodman', '1', '2', 'Brickbaw' ],
+  [ '', '', 'Guru', '0', '2', 'Philip NE' ]
+]
+[
+  [ '17:00:00', 'Sun 4/25', 'Rukio', '2', '1', 'ambitioN.' ],
+  [ '23:00:00', 'Sat, 4/24', 'monk', '2', '0', 'TheRedOrc' ],
+  [ '13:00:00', 'Sun, 4/25', 'kinabr', '2', '1', 'Phillip' ],
+  [ '20:00:00', 'Sun 4/25', 'Fireal', '0', '2', 'AlterEgo' ],
+  [ '', '', 'BurrowRush', '2', '0', 'DaviTsin' ],
+  [
+    '22:00:00',
+    'Friday, April 23',
+    'seanmcnabb',
+    '2',
+    '0',
+    'BrickBaw'
+  ],
+  [ '11:00:00', 'Sat, April 24', 'PakiTo', '1', '2', 'Zsomboy' ],
+  [ '15:00', 'Sunday, 25th', 'BAK', '1', '2', 'Panikrocker' ],
+  [ '09:00:00', 'Sunday, 25th', 'floss2xdaily', '2', '0', 'sickboyyy' ]
+]
+[
+  [ '10:00', 'Sat 4/24', 'Ewar', '1', '2', 'Methodman Orc' ],
+  [ '14:00', 'Sat 4/24', 'Fila mindbender', '2', '0', 'Ocdrummer' ],
+  [ '15:00', 'Sat 4/24', 'Morework', '0', '2', 'Guru' ],
+  [ '19:00', 'Wed, 4/21', 'Fattsrussell', '0', '2', 'Mantalo' ],
+  [ '02:30', 'Sat, 4/24', 'ImaPanda', '2', '1', 'Korymac' ],
+  [ '14:00', 'Sat, 4/24', 'Penguin', '0', '2', 'Phoenix UD' ],
+  [ '15:00', 'Sun, 4/25', 'Beercraft', '1', '2', 'Nuelltz' ],
+  [ '', 'Thurs 4/22', 'Smile', '1', '2', 'Hellomotto' ],
+  [ '11:00', 'Sun 4/25', 'Dragonborn', '0', '2', 'Mostar' ]
+]
+[
+  [ '12:00:00', 'Sat 4/24', 'Albz', '1', '2', 'SoftIceCream' ],
+  [ '', '', 'Sunburst', '2', '1', 'Jatz' ],
+  [ '', '', 'Niklaus', '0', '2', 'Handfish' ],
+  [ '', '', 'Remote', '2', '1', 'Wontu' ],
+  [ '23:00:00', 'Sat, 4/24', 'BushyMo', '2', '0', 'PieCommando' ],
+  [ '', '', 'Wilkyb', '0', '2', 'Melina' ],
+  [ '15:00:00', 'Thursday 4/22', 'Barlenn', '2', '0', 'Link' ],
+  [ '', '', 'cookiebud', '1', '2', 'Grinchy' ],
+  [ '', '', 'BaronVonSG', '0', '2', 'Ninjury' ]
+]

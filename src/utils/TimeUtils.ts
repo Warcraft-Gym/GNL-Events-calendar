@@ -11,4 +11,11 @@ export default class TimeUtils {
 		const jul = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
 		return Math.max(jan, jul) != date.getTimezoneOffset();
 	}
+
+	public whichTimeZone(): string {
+		if (this.isDST(new Date())) {
+			return 'EST';
+		}
+		return 'EDT';
+	}
 }
