@@ -1,4 +1,4 @@
-import { Clan } from '../app.types';
+import { Clan } from '../types/app.types';
 
 export function ValidateMatch(match: string[]): boolean {
 	if (match) {

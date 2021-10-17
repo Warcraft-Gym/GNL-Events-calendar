@@ -1,31 +1,34 @@
 import { calendar_v3, sheets_v4 } from 'googleapis';
 import * as chrono from 'chrono-node';
-import { CalendarMatch, Clan } from './app.types';
+import { CalendarMatch, Clan } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
 import {
 	ValidateMatch,
 	ValidateClans,
 	ValidateStreamer,
 } from './utils/Validations';
+import calendarHandler from './calendarHandler';
 
 const timeUtils = new TimeUtils();
-const TIMEZONE_ADJUSTMENT = timeUtils.getEastCoastAdjustment();
 const TIMEZONE_STRING = timeUtils.whichTimeZone();
 const WEEKS = process.env.WEEKS || 5;
-const CALENDAR_ID = process.env.CALENDAR_ID || '';
 const SHEET_ID = process.env.SHEET_ID_CURRENT || '';
 const CELL_RANGES = process.env.CELL_RANGES || `D6:I14 D18:I26 D30:I38`;
 
-export default async function parser(
+export default async function Parser(
 	sheets: sheets_v4.Sheets,
 	calendar: calendar_v3.Calendar
 ): Promise<void> {
 	console.log('Scanning spreadsheet...');
-	const allSpreadsheetMatches = await getAllSpreadsheetMatches(
-		sheets,
-		createClanWarStrings()
-	);
-	console.log(allSpreadsheetMatches);
+	try {
+		const allSpreadsheetMatches = await getAllSpreadsheetMatches(
+			sheets,
+			createClanWarStrings()
+		);
+		await calendarHandler(calendar, allSpreadsheetMatches);
+	} catch (err) {
+		console.log(`Parser failed with error: ${err}`);
+	}
 }
 
 async function getAllSpreadsheetMatches(
@@ -101,7 +104,7 @@ function buildMatch(clanMatch: string[], clans: Clan[]): CalendarMatch {
 		match.clan2 = clans[1].abbrev;
 	}
 	if (ValidateStreamer(clanMatch)) {
-		match.streamer = clanMatch[0];
+		match.streamer = clanMatch[0].split(' ')[0];
 	}
 
 	match.team1 = clanMatch[4];

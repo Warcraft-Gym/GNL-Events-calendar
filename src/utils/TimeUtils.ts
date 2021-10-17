@@ -1,21 +1,14 @@
 export default class TimeUtils {
-	public getEastCoastAdjustment(): number {
+	public whichTimeZone(): string {
 		if (this.isDST(new Date())) {
-			return 4;
+			return 'EST';
 		}
-		return 5;
+		return 'EDT';
 	}
 
 	private isDST(date: Date): boolean {
 		const jan = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
 		const jul = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
 		return Math.max(jan, jul) != date.getTimezoneOffset();
-	}
-
-	public whichTimeZone(): string {
-		if (this.isDST(new Date())) {
-			return 'EST';
-		}
-		return 'EDT';
 	}
 }

@@ -4,7 +4,7 @@ import fs from 'fs';
 import readline from 'readline';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
-import { RunApp } from './app.types';
+import { RunApp } from './types/app.types';
 import parser from './parser';
 
 const TOKEN_PATH = process.env.TOKEN_PATH || 'token.json';
