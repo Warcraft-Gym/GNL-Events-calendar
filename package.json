@@ -5,7 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "build": "rimraf ./build && tsc",
-    "start:prod": "npm run build && node build/update.js",
+    "start:prod": "npm run build && node build/run/update.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "runonce": "npm run build && node ./build/run/onetime.js"

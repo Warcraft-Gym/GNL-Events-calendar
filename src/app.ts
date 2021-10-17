@@ -5,7 +5,7 @@ import readline from 'readline';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { RunApp } from './types/app.types';
-import parser from './parser';
+import Parser from './parser';
 
 const TOKEN_PATH = process.env.TOKEN_PATH || 'token.json';
 const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || 'credentials.json';
@@ -81,6 +81,6 @@ export default function run(): void {
 		const sheets = google.sheets({ version: 'v4', auth });
 		const calendar = google.calendar({ version: 'v3', auth });
 
-		parser(sheets, calendar);
+		Parser(sheets, calendar);
 	}
 }
