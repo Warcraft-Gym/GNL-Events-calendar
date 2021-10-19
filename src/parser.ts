@@ -2,15 +2,10 @@ import { calendar_v3, sheets_v4 } from 'googleapis';
 import * as chrono from 'chrono-node';
 import { CalendarMatch, Clan } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
-import {
-	ValidateMatch,
-	ValidateClans,
-	ValidateStreamer,
-} from './utils/Validations';
+import { ValidateMatch, ValidateClans, ValidateStreamer } from './utils/Validations';
 import calendarHandler from './calendarHandler';
 
-const timeUtils = new TimeUtils();
-const TIMEZONE_STRING = timeUtils.whichTimeZone();
+const TIMEZONE_STRING = TimeUtils.whichTimeZone();
 const WEEKS = process.env.WEEKS || 5;
 const SHEET_ID = process.env.SHEET_ID_CURRENT || '';
 const CELL_RANGES = process.env.CELL_RANGES || `D6:I14 D18:I26 D30:I38`;

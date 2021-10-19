@@ -12,7 +12,6 @@ export interface CalendarMatch {
 	clan2?: string | null;
 	streamer?: string | null;
 }
-
 export interface Player {
 	name: string;
 }
