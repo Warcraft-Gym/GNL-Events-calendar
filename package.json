@@ -8,7 +8,7 @@
     "start:prod": "npm run build && node build/run/update.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "runonce": "npm run build && node ./build/run/onetime.js"
+    "once": "npm run build && node ./build/run/onetime.js"
   },
   "repository": {
     "type": "git",

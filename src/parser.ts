@@ -1,6 +1,6 @@
 import { calendar_v3, sheets_v4 } from 'googleapis';
 import * as chrono from 'chrono-node';
-import { CalendarMatch, Clan } from './types/app.types';
+import { Match, Clan } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
 import { ValidateMatch, ValidateClans, ValidateStreamer } from './utils/Validations';
 import calendarHandler from './calendarHandler';
@@ -29,13 +29,10 @@ export default async function Parser(
 async function getAllSpreadsheetMatches(
 	sheets: sheets_v4.Sheets,
 	cellRangesStrings: string[]
-): Promise<CalendarMatch[]> {
-	const allSpreadsheetMatches = [] as CalendarMatch[];
+): Promise<Match[]> {
+	const allSpreadsheetMatches = [] as Match[];
 	for (const clanWarBlock in cellRangesStrings) {
-		const clanWar = await requestClanWar(
-			sheets,
-			cellRangesStrings[clanWarBlock]
-		);
+		const clanWar = await requestClanWar(sheets, cellRangesStrings[clanWarBlock]);
 		const clanWarData = parseClanWarData(clanWar);
 		for (const match in clanWarData) {
 			allSpreadsheetMatches.push(clanWarData[match]);
@@ -44,10 +41,7 @@ async function getAllSpreadsheetMatches(
 	return allSpreadsheetMatches;
 }
 
-async function requestClanWar(
-	sheets: sheets_v4.Sheets,
-	clanWarCells: string
-): Promise<string[][]> {
+async function requestClanWar(sheets: sheets_v4.Sheets, clanWarCells: string): Promise<string[][]> {
 	const clanWar = await sheets.spreadsheets.values.get({
 		spreadsheetId: SHEET_ID,
 		range: clanWarCells,
@@ -68,10 +62,10 @@ function createClanWarStrings(): string[] {
 	return clanWar;
 }
 
-function parseClanWarData(clanWar: string[][]): CalendarMatch[] {
+function parseClanWarData(clanWar: string[][]): Match[] {
 	const cw = clanWar;
 	const headers = cw.shift();
-	const matches = [] as CalendarMatch[];
+	const matches = [] as Match[];
 	const clans = getClans(headers);
 
 	for (const match in cw) {
@@ -90,9 +84,9 @@ function getClans(headers: string[] | undefined): Clan[] {
 	}
 	return [{ abbrev: '' }, { abbrev: '' }];
 }
-function buildMatch(clanMatch: string[], clans: Clan[]): CalendarMatch {
+function buildMatch(clanMatch: string[], clans: Clan[]): Match {
 	// validate the input data and build a match object suitable for sending to calendar
-	const match = {} as CalendarMatch;
+	const match = {} as Match;
 
 	if (ValidateClans(clans)) {
 		match.clan1 = clans[0].abbrev;

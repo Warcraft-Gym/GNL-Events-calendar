@@ -1,5 +1,5 @@
 import { calendar_v3 } from 'googleapis';
-import { CalendarMatch } from './types/app.types';
+import { Match, CalendarUpdateDto } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
 
 const CALENDAR_ID = process.env.CALENDAR_ID || '';
@@ -7,14 +7,14 @@ const SEASON = process.env.SEASON || '9';
 
 export default async function calendarHandler(
 	calendar: calendar_v3.Calendar,
-	matches: CalendarMatch[]
+	matches: Match[]
 ): Promise<void> {
-	const events = await getCalendarEvents(calendar);
-	const spreadsheetSourcedEvents = convertMatchesToEvents(matches);
-	const newEvents = spreadsheetSourcedEvents.filter((x) => !events.includes(x));
+	const eventsFromCalendar = await getCalendarEvents(calendar);
+	const calendarUpdates = getCalendarUpdates(eventsFromCalendar, matches);
+	//const eventsFromSpreadsheet = convertMatchesToEvents(matches);
 	// updatedEvents = handleChangedEvents(events, matches); // future feature
 	// await updateCalendarEvents(updatedEvents);
-	await createNewEvents(newEvents, calendar);
+	await createNewEvents(calendarUpdates, calendar);
 }
 async function getCalendarEvents(
 	calendar: calendar_v3.Calendar
@@ -47,12 +47,12 @@ async function getCalendarEvents(
 }
 
 async function createNewEvents(
-	matches: calendar_v3.Schema$Event[],
+	matches: CalendarUpdateDto,
 	calendar: calendar_v3.Calendar
 ): Promise<string> {
 	try {
 		let count = 0;
-		matches.forEach(async (match: calendar_v3.Schema$Event) => {
+		matches.newEvents.forEach(async (match: calendar_v3.Schema$Event) => {
 			await TimeUtils.sleep(400), createEventOnCalendar(match, calendar);
 			count++;
 		});
@@ -78,7 +78,7 @@ function createEventOnCalendar(match: calendar_v3.Schema$Event, calendar: calend
 	);
 }
 
-function buildCalendarEvent(match: CalendarMatch): calendar_v3.Schema$Event {
+function buildCalendarEvent(match: Match): calendar_v3.Schema$Event {
 	const event = {} as calendar_v3.Schema$Event;
 
 	const end = new Date(match.start);
@@ -95,7 +95,7 @@ function buildCalendarEvent(match: CalendarMatch): calendar_v3.Schema$Event {
 
 	return event;
 }
-function convertMatchesToEvents(matches: CalendarMatch[]): calendar_v3.Schema$Event[] {
+function convertMatchesToEvents(matches: Match[]): calendar_v3.Schema$Event[] {
 	const events = [] as calendar_v3.Schema$Event[];
 	matches.forEach((match) => {
 		events.push(buildCalendarEvent(match));
@@ -103,3 +103,28 @@ function convertMatchesToEvents(matches: CalendarMatch[]): calendar_v3.Schema$Ev
 	return events;
 }
 
+function getCalendarUpdates(
+	_calendarEvents: calendar_v3.Schema$Event[],
+	_spreadsheetEvents: Match[]
+): CalendarUpdateDto {
+	const eventsToUpdate = [] as calendar_v3.Schema$Event[];
+	const newEvents = [] as calendar_v3.Schema$Event[];
+
+	// need to add new events
+	_spreadsheetEvents.forEach((ssEvent) => {
+		const result = _calendarEvents.filter(
+			(calEvent) =>
+				calEvent.summary?.match(`${ssEvent.team1}`) &&
+				calEvent.summary?.match(`${ssEvent.team2}`)
+		);
+		console.log(`Matches:`);
+		result.forEach((element) => {
+			console.log(element.summary);
+			console.log(ssEvent.team1);
+			console.log(ssEvent.team2);
+			newEvents.push(buildCalendarEvent(ssEvent));
+		});
+	});
+	console.log(newEvents);
+	return { eventsToUpdate: eventsToUpdate, newEvents: newEvents };
+}
