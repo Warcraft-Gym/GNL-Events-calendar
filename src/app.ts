@@ -7,8 +7,8 @@ import { OAuth2Client } from 'google-auth-library';
 import { RunApp } from './types/app.types';
 import Parser from './parser';
 
-const TOKEN_PATH = process.env.TOKEN_PATH || 'token.json';
-const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || 'credentials.json';
+const TOKEN_PATH = process.env.TOKEN_PATH || './credentials/token.json';
+const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || './credentials/credentials.json';
 const SCOPES = [
 	'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/calendar',
 ];
@@ -19,12 +19,6 @@ export default function run(): void {
 		authorize(JSON.parse(content.toString()), RunApp);
 	});
 
-	/**
-	 * Create an OAuth2 client with the given credentials, and then execute the
-	 * given callback function.
-	 * @param {Object} credentials The authorization client credentials.
-	 * @param {function} callback The callback to call with the authorized client.
-	 */
 	function authorize(credentials: any, callback: RunApp) {
 		const { client_secret, client_id, redirect_uris } = credentials.installed;
 		const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
@@ -36,12 +30,6 @@ export default function run(): void {
 		});
 	}
 
-	/**
-	 * Get and store new token after prompting for user authorization, and then
-	 * execute the given callback with the authorized OAuth2 client.
-	 * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
-	 * @param {getEventsCallback} callback The callback for the authorized client.
-	 */
 	function getNewToken(oAuth2Client: OAuth2Client, callback: RunApp) {
 		const authUrl = oAuth2Client.generateAuthUrl({
 			access_type: 'offline',
@@ -68,7 +56,7 @@ export default function run(): void {
 		});
 	}
 
-	function RunApp(auth: OAuth2Client): void {
+	async function RunApp(auth: OAuth2Client): Promise<void> {
 		const sheets = google.sheets({ version: 'v4', auth });
 		const calendar = google.calendar({ version: 'v3', auth });
 

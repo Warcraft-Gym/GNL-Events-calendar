@@ -8,7 +8,7 @@ import calendarHandler from './calendarHandler';
 const TIMEZONE_STRING = TimeUtils.whichTimeZone();
 const WEEKS = process.env.WEEKS || 5;
 const SHEET_ID = process.env.SHEET_ID_CURRENT || '';
-const CELL_RANGES = process.env.CELL_RANGES || `D6:I14 D18:I26 D30:I38`;
+const CELL_RANGES = process.env.CELL_RANGES || `B6:I14 B18:I26 B30:I38`;
 
 export default async function Parser(
 	sheets: sheets_v4.Sheets,
@@ -20,9 +20,10 @@ export default async function Parser(
 			sheets,
 			createClanWarStrings()
 		);
-		//await calendarHandler(calendar, allSpreadsheetMatches);
+		await calendarHandler(calendar, allSpreadsheetMatches);
 	} catch (err) {
 		console.log(`Parser failed with error: ${err}`);
+		throw err;
 	}
 }
 
