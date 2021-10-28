@@ -26,13 +26,8 @@ export default function run(): void {
 	 * @param {function} callback The callback to call with the authorized client.
 	 */
 	function authorize(credentials: any, callback: RunApp) {
-		const { client_secret, client_id, redirect_uris } =
-			credentials.installed;
-		const oAuth2Client = new google.auth.OAuth2(
-			client_id,
-			client_secret,
-			redirect_uris[0]
-		);
+		const { client_secret, client_id, redirect_uris } = credentials.installed;
+		const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 		// check for existing token
 		fs.readFile(TOKEN_PATH, (err, token) => {
 			if (err) return getNewToken(oAuth2Client, callback);
@@ -61,11 +56,7 @@ export default function run(): void {
 		rl.question('Enter the code from that page here: ', (code) => {
 			rl.close();
 			oAuth2Client.getToken(code, (err: unknown, token: any): void => {
-				if (err)
-					return console.error(
-						'Error while trying to retrieve access token',
-						err
-					);
+				if (err) return console.error('Error while trying to retrieve access token', err);
 				oAuth2Client.setCredentials(token);
 
 				fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {

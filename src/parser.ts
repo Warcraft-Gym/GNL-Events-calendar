@@ -20,7 +20,7 @@ export default async function Parser(
 			sheets,
 			createClanWarStrings()
 		);
-		await calendarHandler(calendar, allSpreadsheetMatches);
+		//await calendarHandler(calendar, allSpreadsheetMatches);
 	} catch (err) {
 		console.log(`Parser failed with error: ${err}`);
 	}
