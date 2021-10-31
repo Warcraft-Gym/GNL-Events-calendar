@@ -9,6 +9,7 @@ export interface Match {
 	start: string; // iso format
 	team1: string;
 	team2: string;
+	idLoc: string;
 	clan1?: string | null;
 	clan2?: string | null;
 	streamer?: string | null;

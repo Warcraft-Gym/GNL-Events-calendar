@@ -4,6 +4,7 @@ import { Match, Clan } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
 import { ValidateMatch, ValidateClans, ValidateStreamer } from './utils/Validations';
 import calendarHandler from './calendarHandler';
+import { getMatchId } from './utils/Helpers';
 
 const TIMEZONE_STRING = TimeUtils.whichTimeZone();
 const WEEKS = process.env.WEEKS || 5;
@@ -100,6 +101,7 @@ function buildMatch(clanMatch: string[], clans: Clan[]): Match {
 	match.team1 = clanMatch[4];
 	match.team2 = clanMatch[7];
 	match.start = parseStartTime(clanMatch);
+	match.idLoc = getMatchId(clanMatch);
 
 	return match;
 }

@@ -63,3 +63,7 @@ export default function run(): void {
 		Parser(sheets, calendar);
 	}
 }
+
+export function nuke(): void {
+	// tbd
+}
