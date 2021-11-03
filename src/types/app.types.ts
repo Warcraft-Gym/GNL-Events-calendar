@@ -24,6 +24,6 @@ export interface Clan {
 }
 
 export interface CalendarUpdateDto {
-	eventsToUpdate: calendar_v3.Schema$Event[];
+	existingEvents: calendar_v3.Schema$Event[];
 	newEvents: calendar_v3.Schema$Event[];
 }

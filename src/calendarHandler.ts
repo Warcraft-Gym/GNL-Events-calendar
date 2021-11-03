@@ -1,9 +1,9 @@
 import { calendar_v3 } from 'googleapis';
 import { Match, CalendarUpdateDto } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
+import { ValidateEventIsDifferent } from './utils/Validations';
 
 const CALENDAR_ID = process.env.CALENDAR_ID || '';
-const SEASON = process.env.SEASON || '8';
 
 export default async function calendarHandler(
 	calendar: calendar_v3.Calendar,
@@ -13,10 +13,12 @@ export default async function calendarHandler(
 	const eventsFromCalendar = await getCalendarEvents(calendar);
 	const calendarUpdates = checkCalendarAgainstSpreadsheet(eventsFromCalendar, matches);
 	await createNewEvents(calendarUpdates.newEvents, calendar);
-	//const eventsFromSpreadsheet = convertMatchesToEvents(matches);
-	// updatedEvents = handleChangedEvents(events, matches); // future feature
-	// await updateCalendarEvents(updatedEvents);
-	//await createNewEvents(calendarUpdates, calendar);
+	/* comment out below to only add */
+	const eventsThatRequireUpdate = filterForEventsThatHaveChanged(
+		calendarUpdates.existingEvents,
+		eventsFromCalendar
+	);
+	await updateEvents(eventsThatRequireUpdate, calendar, eventsFromCalendar);
 }
 async function getCalendarEvents(
 	calendar: calendar_v3.Calendar
@@ -55,20 +57,15 @@ function checkCalendarAgainstSpreadsheet(
 	const newEvents = [] as calendar_v3.Schema$Event[];
 	_spreadsheetEvents.forEach((match) => {
 		if (_calendarEvents.filter((x) => x.location == match.idLoc).length === 0) {
-			console.log(`New Event: ${match.idLoc}`);
 			newEvents.push(buildCalendarEvent(match));
 		} else {
-			console.log(`Existing Event: ${match.idLoc}`);
 			existingEvents.push(buildCalendarEvent(match));
 		}
 	});
-	return { eventsToUpdate: existingEvents, newEvents: newEvents };
+	return { existingEvents: existingEvents, newEvents: newEvents };
 }
 
-async function createNewEvents(
-	matches: calendar_v3.Schema$Event[],
-	calendar: calendar_v3.Calendar
-): Promise<void> {
+async function createNewEvents(matches: calendar_v3.Schema$Event[], calendar: calendar_v3.Calendar): Promise<void> {
 	try {
 		let count = 0;
 		for (const match of matches) {
@@ -82,7 +79,6 @@ async function createNewEvents(
 	}
 }
 function createEventOnCalendar(match: calendar_v3.Schema$Event, calendar: calendar_v3.Calendar) {
-	console.log(`match.location: ${match.location}`);
 	calendar.events.insert(
 		{
 			calendarId: CALENDAR_ID,
@@ -93,8 +89,7 @@ function createEventOnCalendar(match: calendar_v3.Schema$Event, calendar: calend
 				console.log('There was an error contacting the Calendar service: ' + err);
 				return;
 			}
-			console.log('Event created: ');
-			console.log(event?.data?.summary);
+			console.log(`Event created: ${event?.data?.summary}`);
 		}
 	);
 }
@@ -113,8 +108,46 @@ function buildCalendarEvent(match: Match): calendar_v3.Schema$Event {
 	}
 	event.start = { dateTime: match.start };
 	event.end = { dateTime: end.toISOString() };
-	console.log(match.idLoc);
 	event.location = match.idLoc;
 
 	return event;
+}
+
+function filterForEventsThatHaveChanged(
+	_existingEvents: calendar_v3.Schema$Event[],
+	_eventsFromCalendar: calendar_v3.Schema$Event[]
+): calendar_v3.Schema$Event[] {
+	const eventsToUpdate = [] as calendar_v3.Schema$Event[];
+	_eventsFromCalendar.forEach((event) => {
+		if (ValidateEventIsDifferent(event, _existingEvents)) {
+			eventsToUpdate.push(event);
+		}
+	});
+	return eventsToUpdate;
+}
+async function updateEvents(
+	_eventsToUpdate: calendar_v3.Schema$Event[],
+	_calendar: calendar_v3.Calendar,
+	_eventsFromCalendar: calendar_v3.Schema$Event[]
+): Promise<void> {
+	console.log(`Updating ${_eventsToUpdate.length} events`);
+	for (const event in _eventsToUpdate) {
+		const eventId = _eventsFromCalendar.find((x) => x.location == _eventsToUpdate[event].location)?.id;
+		if (eventId != undefined) {
+			_calendar.events.update(
+				{
+					calendarId: CALENDAR_ID,
+					eventId: eventId,
+					requestBody: _eventsToUpdate[event],
+				},
+				function (err, event) {
+					if (err) {
+						console.log('There was an error contacting the Calendar service: ' + err);
+						return;
+					}
+					console.log(`Event updated: ${event?.data.summary}`);
+				}
+			);
+		}
+	}
 }
