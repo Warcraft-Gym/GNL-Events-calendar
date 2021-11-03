@@ -1,4 +1,4 @@
-import { calendar_v3, sheets_v4 } from 'googleapis';
+import { sheets_v4, calendar_v3 } from 'googleapis';
 import * as chrono from 'chrono-node';
 import { Match, Clan } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
@@ -11,16 +11,10 @@ const WEEKS = process.env.WEEKS || 5;
 const SHEET_ID = process.env.SHEET_ID_CURRENT || '';
 const CELL_RANGES = process.env.CELL_RANGES || `B6:I14 B18:I26 B30:I38`;
 
-export default async function Parser(
-	sheets: sheets_v4.Sheets,
-	calendar: calendar_v3.Calendar
-): Promise<void> {
+export default async function Parser(sheets: sheets_v4.Sheets, calendar: calendar_v3.Calendar): Promise<void> {
 	console.log('Scanning spreadsheet...');
 	try {
-		const allSpreadsheetMatches = await getAllSpreadsheetMatches(
-			sheets,
-			createClanWarStrings()
-		);
+		const allSpreadsheetMatches = await getAllSpreadsheetMatches(sheets, createClanWarStrings());
 		await calendarHandler(calendar, allSpreadsheetMatches);
 	} catch (err) {
 		console.log(`Parser failed with error: ${err}`);
@@ -28,10 +22,7 @@ export default async function Parser(
 	}
 }
 
-async function getAllSpreadsheetMatches(
-	sheets: sheets_v4.Sheets,
-	cellRangesStrings: string[]
-): Promise<Match[]> {
+async function getAllSpreadsheetMatches(sheets: sheets_v4.Sheets, cellRangesStrings: string[]): Promise<Match[]> {
 	const allSpreadsheetMatches = [] as Match[];
 	for (const clanWarBlock in cellRangesStrings) {
 		const clanWar = await requestClanWar(sheets, cellRangesStrings[clanWarBlock]);

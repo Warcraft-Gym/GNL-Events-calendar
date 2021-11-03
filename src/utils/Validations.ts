@@ -34,6 +34,7 @@ export function ValidateEventIsDifferent(
 ): boolean {
 	const matchingEvent = existingEvents.find((event) => event.location === _event.location);
 	if (
+		// good god this is ugly
 		matchingEvent != undefined &&
 		(!(_event.description === matchingEvent.description) ||
 			(_event.start &&

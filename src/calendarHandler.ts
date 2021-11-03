@@ -1,28 +1,20 @@
 import { calendar_v3 } from 'googleapis';
 import { Match, CalendarUpdateDto } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
-import { ValidateEventIsDifferent } from './utils/Validations';
+import * as Validations from './utils/Validations';
 
 const CALENDAR_ID = process.env.CALENDAR_ID || '';
 
-export default async function calendarHandler(
-	calendar: calendar_v3.Calendar,
-	matches: Match[]
-): Promise<void> {
+export default async function calendarHandler(calendar: calendar_v3.Calendar, matches: Match[]): Promise<void> {
 	console.log('Scanning calendar...');
 	const eventsFromCalendar = await getCalendarEvents(calendar);
 	const calendarUpdates = checkCalendarAgainstSpreadsheet(eventsFromCalendar, matches);
 	await createNewEvents(calendarUpdates.newEvents, calendar);
 	/* comment out below to only add */
-	const eventsThatRequireUpdate = filterForEventsThatHaveChanged(
-		calendarUpdates.existingEvents,
-		eventsFromCalendar
-	);
+	const eventsThatRequireUpdate = filterForEventsThatHaveChanged(calendarUpdates.existingEvents, eventsFromCalendar);
 	await updateEvents(eventsThatRequireUpdate, calendar, eventsFromCalendar);
 }
-async function getCalendarEvents(
-	calendar: calendar_v3.Calendar
-): Promise<calendar_v3.Schema$Event[]> {
+async function getCalendarEvents(calendar: calendar_v3.Calendar): Promise<calendar_v3.Schema$Event[]> {
 	const calendarMatches = [] as calendar_v3.Schema$Event[];
 	try {
 		const results = await calendar.events.list({
@@ -119,7 +111,7 @@ function filterForEventsThatHaveChanged(
 ): calendar_v3.Schema$Event[] {
 	const eventsToUpdate = [] as calendar_v3.Schema$Event[];
 	_eventsFromCalendar.forEach((event) => {
-		if (ValidateEventIsDifferent(event, _existingEvents)) {
+		if (Validations.ValidateEventIsDifferent(event, _existingEvents)) {
 			eventsToUpdate.push(event);
 		}
 	});

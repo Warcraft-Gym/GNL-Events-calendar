@@ -9,9 +9,7 @@ import Parser from './parser';
 
 const TOKEN_PATH = process.env.TOKEN_PATH || './credentials/token.json';
 const CREDENTIALS_PATH = process.env.CREDENTIALS_PATH || './credentials/credentials.json';
-const SCOPES = [
-	'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/calendar',
-];
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/calendar'];
 
 export default function run(): void {
 	fs.readFile(CREDENTIALS_PATH, (err, content) => {
