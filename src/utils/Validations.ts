@@ -1,3 +1,4 @@
+import { isFuture } from 'date-fns';
 import { Clan } from '../types/app.types';
 import { calendar_v3 } from 'googleapis';
 
@@ -34,16 +35,21 @@ export function ValidateEventIsDifferent(
 ): boolean {
 	const matchingEvent = existingEvents.find((event) => event.location === _event.location);
 	if (
-		// good god this is ugly
-		matchingEvent != undefined &&
-		(!(_event.description === matchingEvent.description) ||
-			(_event.start &&
-				_event.start.dateTime &&
-				matchingEvent.start &&
-				matchingEvent.start.dateTime &&
-				!(Date.parse(_event.start?.dateTime) === Date.parse(matchingEvent.start?.dateTime))) ||
-			!(_event.summary === matchingEvent.summary))
+		matchingEvent &&
+		matchingEvent.start &&
+		matchingEvent.start.dateTime && // match data is valid
+		(!(_event.description === matchingEvent.description) || // descriptions dont match
+			(_event.start && _event.start.dateTime && 
+				!(Date.parse(_event.start?.dateTime) === Date.parse(matchingEvent.start?.dateTime))) || // starts dont match
+			!(_event.summary === matchingEvent.summary)) // summaries dont match
 	) {
+		return true;
+	}
+	return false;
+}
+
+export function ValidateDateIsInTheFuture(_event: calendar_v3.Schema$Event | null | undefined): boolean {
+	if (_event && _event.start && _event.start.dateTime && isFuture(new Date(_event.start.dateTime))) {
 		return true;
 	}
 	return false;

@@ -1,6 +1,6 @@
 {
   "name": "gnl-events-calendar",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "GNL Events Calendar",
   "main": "app.ts",
   "scripts": {
@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "chrono-node": "^2.3.2",
+    "date-fns": "^2.25.0",
     "googleapis": "^39.2.0",
     "node-cron": "^3.0.0"
   }

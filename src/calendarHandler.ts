@@ -1,7 +1,7 @@
 import { calendar_v3 } from 'googleapis';
 import { Match, CalendarUpdateDto } from './types/app.types';
 import TimeUtils from './utils/TimeUtils';
-import * as Validations from './utils/Validations';
+import { ValidateEventIsDifferent, ValidateDateIsInTheFuture } from './utils/Validations';
 
 const CALENDAR_ID = process.env.CALENDAR_ID || '';
 
@@ -64,7 +64,7 @@ async function createNewEvents(matches: calendar_v3.Schema$Event[], calendar: ca
 			await TimeUtils.sleep(400), createEventOnCalendar(match, calendar);
 			count++;
 		}
-		console.log(count ? `${count} new events created` : `no new events created`);
+		console.log(count ? `New events created: ${count}` : `No new events created`);
 	} catch (err) {
 		console.log(`failed to create new calendar events due to error:\n${err}\n`);
 		throw err;
@@ -111,7 +111,7 @@ function filterForEventsThatHaveChanged(
 ): calendar_v3.Schema$Event[] {
 	const eventsToUpdate = [] as calendar_v3.Schema$Event[];
 	_eventsFromCalendar.forEach((event) => {
-		if (Validations.ValidateEventIsDifferent(event, _existingEvents)) {
+		if (ValidateEventIsDifferent(event, _existingEvents) && ValidateDateIsInTheFuture(event)) {
 			eventsToUpdate.push(event);
 		}
 	});
@@ -122,7 +122,10 @@ async function updateEvents(
 	_calendar: calendar_v3.Calendar,
 	_eventsFromCalendar: calendar_v3.Schema$Event[]
 ): Promise<void> {
-	console.log(`Updating ${_eventsToUpdate.length} events`);
+	if (_eventsToUpdate.length == 0) {
+		console.log(`No existing events updated`);
+		return;
+	}
 	for (const event in _eventsToUpdate) {
 		const eventId = _eventsFromCalendar.find((x) => x.location == _eventsToUpdate[event].location)?.id;
 		if (eventId != undefined) {
@@ -132,14 +135,15 @@ async function updateEvents(
 					eventId: eventId,
 					requestBody: _eventsToUpdate[event],
 				},
-				function (err, event) {
+				function (err, updatedEvent) {
 					if (err) {
 						console.log('There was an error contacting the Calendar service: ' + err);
 						return;
 					}
-					console.log(`Event updated: ${event?.data.summary}`);
+					console.log(`Event updated: ${updatedEvent?.data.summary}`);
 				}
 			);
 		}
 	}
+	console.log(`Existing events updated: ${_eventsToUpdate.length}`);
 }
