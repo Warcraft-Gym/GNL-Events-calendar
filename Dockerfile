@@ -1,9 +1,5 @@
-FROM node:14.14.0-alpine3.12
-
+FROM node:16-alpine3.11
 COPY . ./app
-
 WORKDIR /app
-
 RUN npm install
-
-CMD ["node", "update"]
+CMD ["npm", "run", "start:prod"]

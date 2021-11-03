@@ -1,8 +1,9 @@
 # Auth for Google Sheets API
 credentials.json
 token.json
-test.js
-debug.js
+
+# Typescript build files
+build
 
 # Logs
 logs
