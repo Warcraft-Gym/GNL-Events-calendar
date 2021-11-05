@@ -7,13 +7,18 @@ const CALENDAR_ID = process.env.CALENDAR_ID || '';
 
 export default async function calendarHandler(calendar: calendar_v3.Calendar, matches: Match[]): Promise<void> {
 	console.log('Scanning calendar...');
+	const eventsFromSpreadsheet = convertMatchesToEvents(matches);
 	const eventsFromCalendar = await getCalendarEvents(calendar);
-	const calendarUpdates = checkCalendarAgainstSpreadsheet(eventsFromCalendar, matches);
+	const calendarUpdates = checkCalendarAgainstSpreadsheet(eventsFromCalendar, eventsFromSpreadsheet);
 	await createNewEvents(calendarUpdates.newEvents, calendar);
-	/* comment out below to only add */
-	const eventsThatRequireUpdate = filterForEventsThatHaveChanged(calendarUpdates.existingEvents, eventsFromCalendar);
+	const eventsThatRequireUpdate = filterForEventsThatHaveChanged(
+		calendarUpdates.existingEvents,
+		eventsFromCalendar,
+		eventsFromSpreadsheet
+	);
 	await updateEvents(eventsThatRequireUpdate, calendar, eventsFromCalendar);
 }
+
 async function getCalendarEvents(calendar: calendar_v3.Calendar): Promise<calendar_v3.Schema$Event[]> {
 	const calendarMatches = [] as calendar_v3.Schema$Event[];
 	try {
@@ -43,15 +48,15 @@ async function getCalendarEvents(calendar: calendar_v3.Calendar): Promise<calend
 
 function checkCalendarAgainstSpreadsheet(
 	_calendarEvents: calendar_v3.Schema$Event[],
-	_spreadsheetEvents: Match[]
+	_spreadsheetEvents: calendar_v3.Schema$Event[]
 ): CalendarUpdateDto {
 	const existingEvents = [] as calendar_v3.Schema$Event[];
 	const newEvents = [] as calendar_v3.Schema$Event[];
 	_spreadsheetEvents.forEach((match) => {
-		if (_calendarEvents.filter((x) => x.location == match.idLoc).length === 0) {
-			newEvents.push(buildCalendarEvent(match));
+		if (_calendarEvents.filter((x) => x.location == match.location).length === 0) {
+			newEvents.push(match);
 		} else {
-			existingEvents.push(buildCalendarEvent(match));
+			existingEvents.push(match);
 		}
 	});
 	return { existingEvents: existingEvents, newEvents: newEvents };
@@ -107,12 +112,18 @@ function buildCalendarEvent(match: Match): calendar_v3.Schema$Event {
 
 function filterForEventsThatHaveChanged(
 	_existingEvents: calendar_v3.Schema$Event[],
-	_eventsFromCalendar: calendar_v3.Schema$Event[]
+	_eventsFromCalendar: calendar_v3.Schema$Event[],
+	_eventsFromSpreadsheet: calendar_v3.Schema$Event[]
 ): calendar_v3.Schema$Event[] {
 	const eventsToUpdate = [] as calendar_v3.Schema$Event[];
 	_eventsFromCalendar.forEach((event) => {
-		if (ValidateEventIsDifferent(event, _existingEvents) && ValidateDateIsInTheFuture(event)) {
-			eventsToUpdate.push(event);
+		const matchingEvent = _eventsFromSpreadsheet.filter((x) => x.location === event.location).pop();
+		if (
+			matchingEvent &&
+			ValidateEventIsDifferent(matchingEvent, _eventsFromCalendar) &&
+			ValidateDateIsInTheFuture(event)
+		) {
+			eventsToUpdate.push(matchingEvent);
 		}
 	});
 	return eventsToUpdate;
@@ -129,21 +140,19 @@ async function updateEvents(
 	for (const event in _eventsToUpdate) {
 		const eventId = _eventsFromCalendar.find((x) => x.location == _eventsToUpdate[event].location)?.id;
 		if (eventId != undefined) {
-			_calendar.events.update(
-				{
-					calendarId: CALENDAR_ID,
-					eventId: eventId,
-					requestBody: _eventsToUpdate[event],
-				},
-				function (err, updatedEvent) {
-					if (err) {
-						console.log('There was an error contacting the Calendar service: ' + err);
-						return;
-					}
-					console.log(`Event updated: ${updatedEvent?.data.summary}`);
-				}
-			);
+			_calendar.events.update({
+				calendarId: CALENDAR_ID,
+				eventId: eventId,
+				requestBody: _eventsToUpdate[event],
+			});
 		}
 	}
 	console.log(`Existing events updated: ${_eventsToUpdate.length}`);
+}
+function convertMatchesToEvents(matches: Match[]): calendar_v3.Schema$Event[] {
+	const spreadsheetEventsAsCalendarEvents = [] as calendar_v3.Schema$Event[];
+	matches.forEach((event) => {
+		spreadsheetEventsAsCalendarEvents.push(buildCalendarEvent(event));
+	});
+	return spreadsheetEventsAsCalendarEvents;
 }

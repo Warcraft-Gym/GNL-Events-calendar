@@ -37,11 +37,12 @@ export function ValidateEventIsDifferent(
 	if (
 		matchingEvent &&
 		matchingEvent.start &&
-		matchingEvent.start.dateTime && // match data is valid
-		(!(_event.description === matchingEvent.description) || // descriptions dont match
-			(_event.start && _event.start.dateTime && 
-				!(Date.parse(_event.start?.dateTime) === Date.parse(matchingEvent.start?.dateTime))) || // starts dont match
-			!(_event.summary === matchingEvent.summary)) // summaries dont match
+		matchingEvent.start.dateTime &&
+		_event.start &&
+		_event.start.dateTime && // match data is valid
+		(!(_event.description === matchingEvent.description) ||
+			!(Date.parse(_event.start?.dateTime) === Date.parse(matchingEvent.start?.dateTime)) ||
+			!(_event.summary === matchingEvent.summary))
 	) {
 		return true;
 	}
