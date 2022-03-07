@@ -62,7 +62,7 @@ export default function Nuke(): void {
 			calendar.events.delete(
 				{
 					calendarId: process.env.CALENDAR_ID,
-					eventId: thisEvent.id || '',
+					eventId: thisEvent.id as string,
 				},
 				() => (err: string, event: calendar_v3.Schema$Event) => {
 					if (err) {
