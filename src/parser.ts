@@ -8,8 +8,8 @@ import { getMatchId } from './utils/Helpers';
 
 const TIMEZONE_STRING = TimeUtils.whichTimeZone();
 const WEEKS = process.env.WEEKS || 5;
-const SHEET_ID = process.env.SHEET_ID_CURRENT || '';
-const CELL_RANGES = process.env.CELL_RANGES || `B6:I14 B18:I26 B30:I38`;
+const SHEET_ID = process.env.SHEET_ID_CURRENT || process.env.SHEET_ID_TEST || '';
+const CELL_RANGES = process.env.CELL_RANGES || `B5:I17 B20:I32 B35:I47`;
 
 export default async function Parser(sheets: sheets_v4.Sheets, calendar: calendar_v3.Calendar): Promise<void> {
 	console.log('Scanning spreadsheet...');
@@ -18,7 +18,7 @@ export default async function Parser(sheets: sheets_v4.Sheets, calendar: calenda
 		await calendarHandler(calendar, allSpreadsheetMatches);
 	} catch (err) {
 		console.log(`Parser failed with error: ${err}`);
-		throw err;
+		console.log(err);
 	}
 }
 

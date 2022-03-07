@@ -4,7 +4,7 @@ import fs from 'fs';
 import readline from 'readline';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
-import { RunApp } from './types/app.types';
+import { ExecuteWithAuth } from './types/app.types';
 import Parser from './parser';
 
 const TOKEN_PATH = process.env.TOKEN_PATH || './credentials/token.json';
@@ -17,7 +17,7 @@ export default function run(): void {
 		authorize(JSON.parse(content.toString()), RunApp);
 	});
 
-	function authorize(credentials: any, callback: RunApp) {
+	function authorize(credentials: any, callback: ExecuteWithAuth) {
 		const { client_secret, client_id, redirect_uris } = credentials.installed;
 		const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 		// check for existing token
@@ -28,7 +28,7 @@ export default function run(): void {
 		});
 	}
 
-	function getNewToken(oAuth2Client: OAuth2Client, callback: RunApp) {
+	function getNewToken(oAuth2Client: OAuth2Client, callback: ExecuteWithAuth) {
 		const authUrl = oAuth2Client.generateAuthUrl({
 			access_type: 'offline',
 			scope: SCOPES,
@@ -60,8 +60,4 @@ export default function run(): void {
 
 		Parser(sheets, calendar);
 	}
-}
-
-export function nuke(): void {
-	// tbd
 }

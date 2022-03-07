@@ -1,7 +1,7 @@
 import { OAuth2Client } from 'google-auth-library';
 import { calendar_v3 } from 'googleapis';
 
-export interface RunApp {
+export interface ExecuteWithAuth {
 	(oauth: OAuth2Client): void;
 }
 
