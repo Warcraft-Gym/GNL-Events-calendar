@@ -6,7 +6,7 @@ import { ValidateMatch, ValidateClans, ValidateStreamer } from './utils/Validati
 import calendarHandler from './calendarHandler';
 import { getMatchId } from './utils/Helpers';
 
-const TIMEZONE_STRING = TimeUtils.whichTimeZone();
+const TIMEZONE_STRING = 'EST'; //TimeUtils.whichTimeZone();
 const WEEKS = process.env.WEEKS || 5;
 const SHEET_ID = process.env.SHEET_ID_CURRENT || process.env.SHEET_ID_TEST || '';
 const CELL_RANGES = process.env.CELL_RANGES || `B5:I17 B20:I32 B35:I47`;
@@ -98,7 +98,7 @@ function buildMatch(clanMatch: string[], clans: Clan[]): Match {
 }
 
 function parseStartTime(match: string[]): string {
-	const concatDateTime = `${match[2]} ${match[3]}${TIMEZONE_STRING}`;
+	const concatDateTime = `${match[2]} ${match[3]} ${TIMEZONE_STRING}`;
 	try {
 		const parsedDate = chrono.parseDate(concatDateTime);
 		return parsedDate.toISOString();
