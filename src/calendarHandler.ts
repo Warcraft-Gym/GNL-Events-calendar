@@ -4,6 +4,7 @@ import TimeUtils from './utils/TimeUtils';
 import { ValidateEventIsDifferent, ValidateDateIsInTheFuture } from './utils/Validations';
 
 const CALENDAR_ID = process.env.CALENDAR_ID || '';
+const SEASON = process.env.SEASON || '10';
 
 export default async function calendarHandler(calendar: calendar_v3.Calendar, matches: Match[]): Promise<void> {
 	console.log('Scanning calendar...');

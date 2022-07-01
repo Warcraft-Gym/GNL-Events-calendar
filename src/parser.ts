@@ -6,10 +6,11 @@ import { ValidateMatch, ValidateClans, ValidateStreamer } from './utils/Validati
 import calendarHandler from './calendarHandler';
 import { getMatchId } from './utils/Helpers';
 
-const TIMEZONE_STRING = 'EST'; //TimeUtils.whichTimeZone();
+const TIMEZONE_STRING = TimeUtils.whichTimeZone();
 const WEEKS = process.env.WEEKS || 5;
+// const WEEKS_INCLUDING_PLAYOFFS = process.env.WEEKS_INCLUDING_PLAYOFFS || 7;
 const SHEET_ID = process.env.SHEET_ID_CURRENT || process.env.SHEET_ID_TEST || '';
-const CELL_RANGES = process.env.CELL_RANGES || `B5:I17 B20:I32 B35:I47`;
+const CELL_RANGES = process.env.CELL_RANGES || `B5:I18 B21:I34 B37:I50`;
 
 export default async function Parser(sheets: sheets_v4.Sheets, calendar: calendar_v3.Calendar): Promise<void> {
 	console.log('Scanning spreadsheet...');
@@ -49,7 +50,19 @@ function createClanWarStrings(): string[] {
 	// create 18 strings which correspond to the date and time cells for each match
 	for (let i = 1; i <= WEEKS; i++) {
 		for (let j = 0; j <= cellRanges.length - 1; j++) {
-			clanWar.push(`Week ${i}!${cellRanges[j]}`);
+			if (i <= WEEKS) {
+				clanWar.push(`Week ${i}!${cellRanges[j]}`);
+			}
+			switch (i) {
+				case 6:
+					clanWar.push(`Playoffs Semi Finals!${cellRanges[j]}`);
+					break;
+				case 7:
+					clanWar.push(`Playoffs Final!${cellRanges[j]}`);
+					break;
+				default:
+					break;
+			}
 		}
 	}
 	return clanWar;
@@ -77,6 +90,7 @@ function getClans(headers: string[] | undefined): Clan[] {
 	}
 	return [{ abbrev: '' }, { abbrev: '' }];
 }
+
 function buildMatch(clanMatch: string[], clans: Clan[]): Match {
 	// validate the input data and build a match object suitable for sending to calendar
 	const match = {} as Match;
